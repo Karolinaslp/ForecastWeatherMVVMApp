@@ -3,26 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/currentWeatherFragment">
 
+<!--    <fragment-->
+<!--        android:id="@+id/FirstFragment"-->
+<!--        android:name="com.learning.forecastweathermmvmapp.FirstFragment"-->
+<!--        android:label="@string/first_fragment_label"-->
+<!--        tools:layout="@layout/fragment_first">-->
+
+<!--        <action-->
+<!--            android:id="@+id/action_FirstFragment_to_SecondFragment"-->
+<!--            app:destination="@id/SecondFragment" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/SecondFragment"-->
+<!--        android:name="com.learning.forecastweathermmvmapp.SecondFragment"-->
+<!--        android:label="@string/second_fragment_label"-->
+<!--        tools:layout="@layout/fragment_second">-->
+
+<!--        <action-->
+<!--            android:id="@+id/action_SecondFragment_to_FirstFragment"-->
+<!--            app:destination="@id/FirstFragment" />-->
+<!--    </fragment>-->
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.learning.forecastweathermmvmapp.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
+        android:id="@+id/currentWeatherFragment"
+        android:name="com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherFragment"
+        android:label="fragment_current_weather"
+        tools:layout="@layout/fragment_current_weather" />
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.learning.forecastweathermmvmapp.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
+        android:id="@+id/futureListWeatherFragment"
+        android:name="com.learning.forecastweathermmvmapp.ui.weather.future.list.FutureListWeatherFragment"
+        android:label="fragment_future_list_weather"
+        tools:layout="@layout/fragment_future_list_weather" />
+    <fragment
+        android:id="@+id/futureDetailWeatherFragment"
+        android:name="com.learning.forecastweathermmvmapp.ui.weather.future.detail.FutureDetailWeatherFragment"
+        android:label="fragment_future_detail_weather"
+        tools:layout="@layout/fragment_future_detail_weather" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.learning.forecastweathermmvmapp.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>
