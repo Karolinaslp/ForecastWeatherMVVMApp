@@ -1,4 +1,4 @@
-package com.learning.forecastweathermmvmapp.data
+package com.learning.forecastweathermmvmapp.data.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherResponse
@@ -17,13 +17,16 @@ const val API_KEY = "2fbd36cbb0c94477bc9131242230708"
 interface WeatherApiService {
 
     @GET("current.json")
-    fun getCurrentWeatherAsync(
+    fun getCurrentWeather(
         @Query("q") location: String,
         @Query("lang") languageCode: String = "en"
     ): Deferred<CurrentWeatherResponse>
 
     companion object {
-        operator fun invoke(): WeatherApiService {
+        operator fun invoke(
+            connectivityInterceptor: ConnectivityInterceptor
+
+        ): WeatherApiService {
             val requestInterceptor = Interceptor { chain ->
                 val url = chain.request()
                     .url()
@@ -40,6 +43,7 @@ interface WeatherApiService {
             val okHttpClient = OkHttpClient
                 .Builder()
                 .addInterceptor(requestInterceptor)
+                .addInterceptor(connectivityInterceptor)
                 .build()
 
             return Retrofit.Builder()
