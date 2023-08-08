@@ -1,13 +1,12 @@
 package com.learning.forecastweathermmvmapp.data
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.learning.forecastweathermmvmapp.data.response.CurrentWeatherResponse
+import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -18,12 +17,15 @@ const val API_KEY = "2fbd36cbb0c94477bc9131242230708"
 interface WeatherApiService {
 
     @GET("current.json")
-    fun getCurrentWeather(@Query("q") location: String, @Query("lang") languageCode: String = "en"): Deferred<CurrentWeatherResponse>
+    fun getCurrentWeatherAsync(
+        @Query("q") location: String,
+        @Query("lang") languageCode: String = "en"
+    ): Deferred<CurrentWeatherResponse>
 
     companion object {
         operator fun invoke(): WeatherApiService {
             val requestInterceptor = Interceptor { chain ->
-                val url= chain.request()
+                val url = chain.request()
                     .url()
                     .newBuilder()
                     .addQueryParameter("key", API_KEY)

@@ -1,4 +1,4 @@
-package com.learning.forecastweathermmvmapp.data.response
+package com.learning.forecastweathermmvmapp.data.db.entity
 
 
 import com.google.gson.annotations.SerializedName

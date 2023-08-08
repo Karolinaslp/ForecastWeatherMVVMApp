@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.data.WeatherApiService
 import com.learning.forecastweathermmvmapp.databinding.FragmentCurrentWeatherBinding
 import kotlinx.coroutines.Dispatchers
@@ -37,11 +36,11 @@ class CurrentWeatherFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
-        // TODO: Use the ViewModel
+
         val apiService = WeatherApiService.invoke()
 
         GlobalScope.launch(Dispatchers.Main) {
-            val currentWeatherResponse = apiService.getCurrentWeather("Zgierz", "pl").await()
+            val currentWeatherResponse = apiService.getCurrentWeatherAsync("Zgierz", "pl").await()
             binding.textView.text = currentWeatherResponse.toString()
         }
     }
