@@ -1,7 +1,7 @@
 package com.learning.forecastweathermmvmapp.data.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherResponse
+import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherRemoteResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -20,7 +20,7 @@ interface WeatherApiService {
     fun getCurrentWeather(
         @Query("q") location: String,
         @Query("lang") languageCode: String = "en"
-    ): Deferred<CurrentWeatherResponse>
+    ): Deferred<CurrentWeatherRemoteResponse>
 
     companion object {
         operator fun invoke(
