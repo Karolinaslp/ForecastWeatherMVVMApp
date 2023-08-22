@@ -1,16 +1,15 @@
-package com.learning.forecastweathermmvmapp.data.db.entity
+package com.learning.forecastweathermmvmapp.data.network.response
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.learning.forecastweathermmvmapp.data.network.response.ConditionRemoteEntry
 
 const val CURRENT_WEATHER_ID = 0
 
 @Entity(tableName = "current_weather")
-data class CurrentWeatherEntry(
+data class CurrentWeatherRemoteEntry(
     @SerializedName("feelslike_c")
     val feelslikeC: Double,
     @SerializedName("is_day")
