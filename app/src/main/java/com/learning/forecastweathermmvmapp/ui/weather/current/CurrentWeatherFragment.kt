@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.databinding.FragmentCurrentWeatherBinding
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
@@ -42,11 +44,57 @@ class CurrentWeatherFragment : ScopedFragment() {
 
     private fun bindUI() = launch {
         val currentWeather = viewModel.weather.await()
+
         currentWeather.observe(this@CurrentWeatherFragment, Observer {
             if (it == null) return@Observer
 
-            binding.textView.text = it.toString()
+            binding.groupLoading.visibility = View.GONE
+            updateLocation("Los Angeles")
+            updateDateToToday()
+            updateTemperature(it.temperature, it.feelsLikeTemperature)
+            updatCondition(it.conditionText)
+            updatePrecipitation(it.precipitationVolume)
+            updateWind(it.windDirection, it.windSpeed)
+            updateVisibility(it.visibilityDistance)
+
+            Glide.with(this@CurrentWeatherFragment)
+                .load("https:${it.conditionIconUrl}")
+                .into(binding.imageViewConditionIcon)
         })
+    }
+
+    private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {
+       return if (viewModel.isMetric) metric else imperial
+    }
+    private fun updateLocation(location: String) {
+        (activity as? AppCompatActivity)?.supportActionBar?.title = location
+    }
+    private fun updateDateToToday() {
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle = "Today"
+    }
+
+    private fun updateTemperature(temperature: Double, feelsLike: Double) {
+        val unitAbbreviation = chooseLocalizedUnitAbbreviation("°C" ,"°F")
+        binding.textViewTemperature.text = "$temperature$unitAbbreviation"
+        binding.textViewFeelsLikeTemperature.text = "Feels like $feelsLike$unitAbbreviation"
+    }
+
+    private fun updatCondition(condition: String) {
+        binding.textViewCondition.text = condition
+    }
+    private fun updatePrecipitation(precipitationVolume: Double) {
+        val unitAbbreviation = chooseLocalizedUnitAbbreviation("mm" , "in")
+        binding.textViewPrecipitation.text = "Precipitation: $precipitationVolume $unitAbbreviation"
+    }
+
+    private fun updateWind(windDirectiion: String, windSpeed: Double) {
+        val unitAbbreviation = chooseLocalizedUnitAbbreviation("kph", "mph")
+        binding.textViewWind.text = "Wind: $windDirectiion, $windSpeed $unitAbbreviation"
+    }
+
+    private fun updateVisibility(visibilityDistance: Double) {
+        val unitAbbreviation = chooseLocalizedUnitAbbreviation("km", "mi.")
+        binding.textViewVisibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
     }
 
     override fun onDestroyView() {
