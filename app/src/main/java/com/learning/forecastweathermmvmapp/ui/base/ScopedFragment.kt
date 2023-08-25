@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlin.coroutines.CoroutineContext
 
 abstract class ScopedFragment : Fragment(), CoroutineScope {
