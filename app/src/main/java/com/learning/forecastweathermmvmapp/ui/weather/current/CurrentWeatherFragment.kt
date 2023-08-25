@@ -1,32 +1,45 @@
 package com.learning.forecastweathermmvmapp.ui.weather.current
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
-import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.databinding.FragmentCurrentWeatherBinding
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class CurrentWeatherFragment : ScopedFragment() {
-    private val viewModel: CurrentWeatherViewModel by viewModel()
+    private val viewModel: CurrentWeatherViewModel by inject()
 
     private var _binding: FragmentCurrentWeatherBinding? = null
     private val binding
         get() = _binding!!
+
+    private val UNIT_SYSTEM_KEY = "UNIT_SYSTEM"
+    private lateinit var  prefs: SharedPreferences
+
+    private val listener = object: SharedPreferences.OnSharedPreferenceChangeListener{
+        override fun onSharedPreferenceChanged(
+            sharedPreferences: SharedPreferences?,
+            key: String?
+        ) {
+            Log.d("TAG", "return value BATMAN")
+            if (key == UNIT_SYSTEM_KEY) {
+               val temp = sharedPreferences?.getString(UNIT_SYSTEM_KEY, "mmm")
+           }
+        }
+
+    }
 
 
     override fun onCreateView(
@@ -40,6 +53,8 @@ class CurrentWeatherFragment : ScopedFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bindUI()
+        prefs = context?.applicationContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
+        prefs.registerOnSharedPreferenceChangeListener(listener)
     }
 
     private fun bindUI() = launch {
@@ -49,7 +64,7 @@ class CurrentWeatherFragment : ScopedFragment() {
             if (it == null) return@Observer
 
             binding.groupLoading.visibility = View.GONE
-            updateLocation("Los Angeles")
+            updateLocation("Warsaw")
             updateDateToToday()
             updateTemperature(it.temperature, it.feelsLikeTemperature)
             updatCondition(it.conditionText)
@@ -64,7 +79,7 @@ class CurrentWeatherFragment : ScopedFragment() {
     }
 
     private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {
-       return if (viewModel.isMetric) metric else imperial
+       return if (viewModel.isMetric()) metric else imperial
     }
     private fun updateLocation(location: String) {
         (activity as? AppCompatActivity)?.supportActionBar?.title = location
