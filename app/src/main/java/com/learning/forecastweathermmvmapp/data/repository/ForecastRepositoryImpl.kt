@@ -56,4 +56,8 @@ class ForecastRepositoryImpl(
         return lastFetchTime.isBefore(thirtyMinutesAgo)
     }
 
+    override fun getWeatherTest(isMetric:Boolean): LiveData<out UnitSpecificCurrentWeatherEntry>{
+        return if(isMetric) currentWeatherDao.getWeatherMetric()
+        else currentWeatherDao.getWeatherImperial()
+    }
 }

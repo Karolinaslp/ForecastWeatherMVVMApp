@@ -15,8 +15,6 @@ import com.learning.forecastweathermmvmapp.data.provider.UnitProviderImpl
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepositoryImpl
 import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModel
-import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModelFactory
-import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -32,7 +30,6 @@ class ForecastApplication : Application() {
         single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
         single { WeatherApiService(get()) }
         single<WeatherNetworkDataSource> { WeatherNetworkDataSourceImpl(get()) }
-        single<UnitProvider> { UnitProviderImpl(applicationContext) }
         factory<ForecastRepository> { ForecastRepositoryImpl(get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
         viewModel { CurrentWeatherViewModel(get(), get(), get()) }

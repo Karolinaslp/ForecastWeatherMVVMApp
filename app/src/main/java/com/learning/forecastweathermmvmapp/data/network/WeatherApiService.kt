@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 const val API_KEY = "2fbd36cbb0c94477bc9131242230708"
 
-//http://api.weatherapi.com/v1/current.json?key=2fbd36cbb0c94477bc9131242230708&q=Lodz&aqi=no
+//http://api.weatherapi.com/v1/current.json?key=89ac5cb035c74d3693285907232808&q=Lodz&aqi=no
 
 interface WeatherApiService {
 
