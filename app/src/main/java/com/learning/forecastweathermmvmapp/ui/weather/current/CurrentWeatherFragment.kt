@@ -58,18 +58,26 @@ class CurrentWeatherFragment : ScopedFragment() {
 
         bindUI()
 
-        prefs= context?.applicationContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
+        prefs =
+            context?.applicationContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
         prefs.registerOnSharedPreferenceChangeListener(listener)
     }
 
     private fun bindUI() = launch {
         val currentWeather = viewModel.weather.await()
+        val weatherLocation = viewModel.weatherLocation.await()
+
+        weatherLocation.observe(this@CurrentWeatherFragment, Observer {  location ->
+            if (location == null) return@Observer
+
+            updateLocation(location.name)
+        })
 
         currentWeather.observe(this@CurrentWeatherFragment, Observer {
             if (it == null) return@Observer
 
             binding.groupLoading.visibility = View.GONE
-            updateLocation("Warsaw")
+
             updateDateToToday()
             updateTemperature(it.temperature, it.feelsLikeTemperature)
             updatCondition(it.conditionText)
@@ -118,28 +126,6 @@ class CurrentWeatherFragment : ScopedFragment() {
     private fun updateVisibility(visibilityDistance: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation("km", "mi.")
         binding.textViewVisibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        launch {
-            val currentWeather = viewModel.getData()
-            currentWeather.observe(viewLifecycleOwner, Observer {
-                binding.groupLoading.visibility = View.GONE
-                updateLocation("Warsaw")
-                updateDateToToday()
-                updateTemperature(it.temperature, it.feelsLikeTemperature)
-                updatCondition(it.conditionText)
-                updatePrecipitation(it.precipitationVolume)
-                updateWind(it.windDirection, it.windSpeed)
-                updateVisibility(it.visibilityDistance)
-
-                Glide.with(this@CurrentWeatherFragment)
-                    .load("https:${it.conditionIconUrl}")
-                    .into(binding.imageViewConditionIcon)
-            })
-        }
     }
 
     override fun onDestroyView() {

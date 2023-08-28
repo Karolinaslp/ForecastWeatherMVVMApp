@@ -23,6 +23,10 @@ class CurrentWeatherViewModel(
     val weather by lazyDeferred {
         forecastRepository.getCurrentWeather(isMetric())
     }
+
+    val weatherLocation by lazyDeferred {
+        forecastRepository.getWeatherLocation()
+    }
     fun getData(): LiveData<out UnitSpecificCurrentWeatherEntry> {
         return forecastRepository.getWeatherTest(isMetric())
     }
