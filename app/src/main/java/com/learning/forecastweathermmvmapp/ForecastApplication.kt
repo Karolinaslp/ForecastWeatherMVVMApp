@@ -10,13 +10,13 @@ import com.learning.forecastweathermmvmapp.data.network.ConnectivityInterceptorI
 import com.learning.forecastweathermmvmapp.data.network.WeatherApiService
 import com.learning.forecastweathermmvmapp.data.network.WeatherNetworkDataSource
 import com.learning.forecastweathermmvmapp.data.network.WeatherNetworkDataSourceImpl
+import com.learning.forecastweathermmvmapp.data.provider.LocationProvider
+import com.learning.forecastweathermmvmapp.data.provider.LocationProviderImpl
 import com.learning.forecastweathermmvmapp.data.provider.UnitProvider
 import com.learning.forecastweathermmvmapp.data.provider.UnitProviderImpl
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepositoryImpl
 import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModel
-import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModelFactory
-import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -29,11 +29,12 @@ class ForecastApplication : Application() {
         single { Room.databaseBuilder(get(), ForecastDatabase::class.java, "forecast.db").build() }
         single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
         single { get<ForecastDatabase>().currentWeatherDao() }
+        single { get<ForecastDatabase>().weatherLocationDao() }
         single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
         single { WeatherApiService(get()) }
         single<WeatherNetworkDataSource> { WeatherNetworkDataSourceImpl(get()) }
-        single<UnitProvider> { UnitProviderImpl(applicationContext) }
-        factory<ForecastRepository> { ForecastRepositoryImpl(get(), get()) }
+        single <LocationProvider>{LocationProviderImpl()}
+        factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
         viewModel { CurrentWeatherViewModel(get(), get(), get()) }
     }

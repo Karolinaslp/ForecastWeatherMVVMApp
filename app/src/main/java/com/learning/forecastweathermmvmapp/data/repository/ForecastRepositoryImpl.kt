@@ -3,20 +3,26 @@ package com.learning.forecastweathermmvmapp.data.repository
 
 import androidx.lifecycle.LiveData
 import com.learning.forecastweathermmvmapp.data.db.CurrentWeatherDao
+import com.learning.forecastweathermmvmapp.data.db.WeatherLocationDao
+import com.learning.forecastweathermmvmapp.data.db.entity.WeatherLocation
 import com.learning.forecastweathermmvmapp.data.db.unitlocalized.UnitSpecificCurrentWeatherEntry
 import com.learning.forecastweathermmvmapp.data.network.WeatherNetworkDataSource
 import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherRemoteResponse
+import com.learning.forecastweathermmvmapp.data.provider.LocationProvider
 import com.learning.forecastweathermmvmapp.internal.mapToLocalEntry
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.ZonedDateTime
+import org.threeten.bp.ZonedDateTime
 import java.util.Locale
 
 class ForecastRepositoryImpl(
     private val currentWeatherDao: CurrentWeatherDao,
-    private val weatherNetworkDataSource: WeatherNetworkDataSource
+    private val weatherLocationDao: WeatherLocationDao,
+    private val weatherNetworkDataSource: WeatherNetworkDataSource,
+    private val locationProvider: LocationProvider
 ) : ForecastRepository {
 
     init {
@@ -33,20 +39,38 @@ class ForecastRepositoryImpl(
         }
     }
 
+    override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
+        return withContext(Dispatchers.IO) {
+            return@withContext weatherLocationDao.getLocation()
+        }
+
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
     private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherRemoteResponse) {
         GlobalScope.launch(Dispatchers.IO) {
             currentWeatherDao.upsert(fetchedWeather.currentWeatherEntry.mapToLocalEntry())
+            weatherLocationDao.upsert(fetchedWeather.location)
         }
     }
 
     private suspend fun initWeatherData() {
-        if (isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)))
+        val lastWeatherLocation = weatherLocationDao.getLocation().value
+
+        if (lastWeatherLocation == null
+            || locationProvider.hasLocationChanged(lastWeatherLocation)) {
+            fetchCurrentWeather()
+            return
+        }
+
+        if (isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime))
             fetchCurrentWeather()
     }
 
+
     private suspend fun fetchCurrentWeather() {
         weatherNetworkDataSource.fetchCurrentWeather(
-            "London",
+            locationProvider.getPreferredLocationString(),
             Locale.getDefault().language
         )
     }
@@ -56,4 +80,10 @@ class ForecastRepositoryImpl(
         return lastFetchTime.isBefore(thirtyMinutesAgo)
     }
 
+    override fun getWeatherFromDatabase(isMetric:Boolean): LiveData<out UnitSpecificCurrentWeatherEntry>{
+        return if(isMetric) currentWeatherDao.getWeatherMetric()
+        else currentWeatherDao.getWeatherImperial()
+    }
 }
+
+
