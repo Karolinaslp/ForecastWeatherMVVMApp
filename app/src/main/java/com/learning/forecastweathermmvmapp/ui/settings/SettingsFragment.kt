@@ -11,6 +11,7 @@ class SettingsFragment() : PreferenceFragmentCompat(){
        addPreferencesFromResource(R.xml.preferences)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Settings"

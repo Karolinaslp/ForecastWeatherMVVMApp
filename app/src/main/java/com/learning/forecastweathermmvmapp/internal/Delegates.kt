@@ -3,9 +3,11 @@ package com.learning.forecastweathermmvmapp.internal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
+@OptIn(DelicateCoroutinesApi::class)
 fun <T> lazyDeferred(block: suspend CoroutineScope.() -> T): Lazy<Deferred<T>> {
     return lazy {
         GlobalScope.async(start = CoroutineStart.LAZY) {

@@ -46,6 +46,7 @@ class ForecastRepositoryImpl(
 
     }
 
+
     @OptIn(DelicateCoroutinesApi::class)
     private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherRemoteResponse) {
         GlobalScope.launch(Dispatchers.IO) {
