@@ -10,6 +10,7 @@ import com.learning.forecastweathermmvmapp.data.network.WeatherNetworkDataSource
 import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherRemoteResponse
 import com.learning.forecastweathermmvmapp.data.provider.LocationProvider
 import com.learning.forecastweathermmvmapp.internal.mapToLocalEntry
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -45,6 +46,7 @@ class ForecastRepositoryImpl(
 
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherRemoteResponse) {
         GlobalScope.launch(Dispatchers.IO) {
             currentWeatherDao.upsert(fetchedWeather.currentWeatherEntry.mapToLocalEntry())
@@ -78,7 +80,7 @@ class ForecastRepositoryImpl(
         return lastFetchTime.isBefore(thirtyMinutesAgo)
     }
 
-    override fun getWeatherTest(isMetric:Boolean): LiveData<out UnitSpecificCurrentWeatherEntry>{
+    override fun getWeatherFromDatabase(isMetric:Boolean): LiveData<out UnitSpecificCurrentWeatherEntry>{
         return if(isMetric) currentWeatherDao.getWeatherMetric()
         else currentWeatherDao.getWeatherImperial()
     }

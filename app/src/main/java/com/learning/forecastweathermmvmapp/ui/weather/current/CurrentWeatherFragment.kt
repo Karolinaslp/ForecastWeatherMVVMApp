@@ -1,6 +1,5 @@
 package com.learning.forecastweathermmvmapp.ui.weather.current
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -9,16 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.databinding.FragmentCurrentWeatherBinding
-import com.learning.forecastweathermmvmapp.internal.glide.ForecastAppGlideModule
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class CurrentWeatherFragment : ScopedFragment() {
@@ -41,7 +36,6 @@ class CurrentWeatherFragment : ScopedFragment() {
                 val temp = sharedPreferences?.getString(UNIT_SYSTEM_KEY, "mmm")
             }
         }
-
     }
 
 
@@ -50,9 +44,28 @@ class CurrentWeatherFragment : ScopedFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCurrentWeatherBinding.inflate(layoutInflater, container, false)
+
+        viewModel.currentUnitSystem.observe(viewLifecycleOwner) {
+            val currentWeather = viewModel.getWeatherFromDatabase()
+            currentWeather.observe(viewLifecycleOwner, Observer {
+                if (it == null) return@Observer
+                binding.groupLoading.visibility = View.GONE
+                updateLocation("LODZ")
+                updateDateToToday()
+                updateTemperature(it.temperature, it.feelsLikeTemperature)
+                updateCondition(it.conditionText)
+                updateVisibility(it.visibilityDistance)
+                updatePrecipitation(it.precipitationVolume)
+                updateWind(it.windDirection, it.windSpeed)
+                Glide.with(this@CurrentWeatherFragment)
+                    .load("https:${it.conditionIconUrl}")
+                    .into(binding.imageViewConditionIcon)
+            })
+        }
         return binding.root
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -80,7 +93,7 @@ class CurrentWeatherFragment : ScopedFragment() {
 
             updateDateToToday()
             updateTemperature(it.temperature, it.feelsLikeTemperature)
-            updatCondition(it.conditionText)
+            updateCondition(it.conditionText)
             updatePrecipitation(it.precipitationVolume)
             updateWind(it.windDirection, it.windSpeed)
             updateVisibility(it.visibilityDistance)
@@ -109,7 +122,7 @@ class CurrentWeatherFragment : ScopedFragment() {
         binding.textViewFeelsLikeTemperature.text = "Feels like $feelsLike$unitAbbreviation"
     }
 
-    private fun updatCondition(condition: String) {
+    private fun updateCondition(condition: String) {
         binding.textViewCondition.text = condition
     }
 

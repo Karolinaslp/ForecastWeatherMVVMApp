@@ -9,14 +9,27 @@ import com.learning.forecastweathermmvmapp.data.provider.UnitProvider
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.internal.lazyDeferred
 
+private const val UNIT_SYSTEM = "UNIT_SYSTEM"
+
 class CurrentWeatherViewModel(
     private val forecastRepository: ForecastRepository,
     unitProvider: UnitProvider,
-    var prefs: SharedPreferences?
+    private var prefs: SharedPreferences?
 ) : ViewModel() {
-    var currentTemperature= MutableLiveData<Double>()
-    private val unitSystem = unitProvider.getUnitSystem()
-    fun isMetric(): Boolean{
+    var currentUnitSystem = MutableLiveData<String>()
+
+    private val prefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == UNIT_SYSTEM) {
+                currentUnitSystem.value = sharedPreferences.getString(UNIT_SYSTEM, "def")
+            }
+        }
+
+    init {
+        prefs?.registerOnSharedPreferenceChangeListener(prefsListener)
+    }
+
+    fun isMetric(): Boolean {
         return prefs?.getString("UNIT_SYSTEM", "METRIC").equals("METRIC")
     }
 
@@ -27,7 +40,8 @@ class CurrentWeatherViewModel(
     val weatherLocation by lazyDeferred {
         forecastRepository.getWeatherLocation()
     }
-    fun getData(): LiveData<out UnitSpecificCurrentWeatherEntry> {
-        return forecastRepository.getWeatherTest(isMetric())
+
+    fun getWeatherFromDatabase(): LiveData<out UnitSpecificCurrentWeatherEntry> {
+        return forecastRepository.getWeatherFromDatabase(isMetric())
     }
 }

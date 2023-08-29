@@ -93,12 +93,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
     // Preference
-    def preference_version = "1.2.1"
-
-    // Java language implementation
-    implementation "androidx.preference:preference:$preference_version"
+//    // Java language implementation
+//    implementation "androidx.preference:preference:1.2.1"
     // Kotlin
-    implementation "androidx.preference:preference-ktx:$preference_version"
+    implementation "androidx.preference:preference-ktx:1.2.1"
 
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
