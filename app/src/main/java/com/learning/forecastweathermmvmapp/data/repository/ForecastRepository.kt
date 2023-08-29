@@ -8,4 +8,5 @@ interface ForecastRepository {
     suspend fun getCurrentWeather(metric: Boolean): LiveData<out UnitSpecificCurrentWeatherEntry>
     fun getWeatherFromDatabase(isMetric:Boolean): LiveData<out UnitSpecificCurrentWeatherEntry>
     suspend fun getWeatherLocation(): LiveData<WeatherLocation>
+  //  fun getWeatherLocationFromDatabase(): LiveData<WeatherLocation>
 }

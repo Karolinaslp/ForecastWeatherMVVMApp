@@ -3,6 +3,7 @@ package com.learning.forecastweathermmvmapp
 import android.app.Application
 import androidx.preference.PreferenceManager
 import androidx.room.Room
+import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.learning.forecastweathermmvmapp.data.db.ForecastDatabase
 import com.learning.forecastweathermmvmapp.data.network.ConnectivityInterceptor
@@ -33,7 +34,8 @@ class ForecastApplication : Application() {
         single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
         single { WeatherApiService(get()) }
         single<WeatherNetworkDataSource> { WeatherNetworkDataSourceImpl(get()) }
-        single <LocationProvider>{LocationProviderImpl()}
+        single { LocationServices.getFusedLocationProviderClient(get()) }
+        single<LocationProvider>{ LocationProviderImpl(get(), get()) }
         factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
         viewModel { CurrentWeatherViewModel(get(), get(), get()) }
