@@ -21,7 +21,7 @@ abstract class ForecastDatabase : RoomDatabase() {
         private var instance: ForecastDatabase? = null
         private val LOCK = Any()
 
-        private fun buildDatabase(context: Context) =
+        fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext,
                 ForecastDatabase::class.java, "forecast.db")
                 .build()

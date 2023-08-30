@@ -27,15 +27,16 @@ class ForecastApplication : Application() {
 
     //Create Koin module
     private val appModule = module {
-        single { Room.databaseBuilder(get(), ForecastDatabase::class.java, "forecast.db").build() }
+//        single { Room.databaseBuilder(get(), ForecastDatabase::class.java, "forecast.db").build() }
+        single { ForecastDatabase.buildDatabase(get()) }
         single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
         single { get<ForecastDatabase>().currentWeatherDao() }
         single { get<ForecastDatabase>().weatherLocationDao() }
         single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
         single { WeatherApiService(get()) }
         single<WeatherNetworkDataSource> { WeatherNetworkDataSourceImpl(get()) }
-        single { LocationServices.getFusedLocationProviderClient(get()) }
         single<LocationProvider>{ LocationProviderImpl(get(), get()) }
+        single { LocationServices.getFusedLocationProviderClient(androidContext()) }
         factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
         viewModel { CurrentWeatherViewModel(get(), get(), get()) }
