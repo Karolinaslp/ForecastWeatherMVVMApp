@@ -2,6 +2,7 @@ package com.learning.forecastweathermmvmapp.data.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherRemoteResponse
+import com.learning.forecastweathermmvmapp.data.network.response.FutureWeatherRemoteResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -12,15 +13,24 @@ import retrofit2.http.Query
 
 const val API_KEY = "89ac5cb035c74d3693285907232808"
 
-//http://api.weatherapi.com/v1/current.json?key=89ac5cb035c74d3693285907232808&q=Lodz&aqi=no
+
 
 interface WeatherApiService {
 
+    //http://api.weatherapi.com/v1/current.json?key=89ac5cb035c74d3693285907232808&q=Lodz&aqi=no
     @GET("current.json")
     fun getCurrentWeather(
         @Query("q") location: String,
         @Query("lang") languageCode: String = "en"
     ): Deferred<CurrentWeatherRemoteResponse>
+
+    //https://api.weatherapi.com/v1/forecast.json?key=89ac5cb035c74d3693285907232808&q=London&days=1&aqi=no&alerts=no
+    @GET("forecast.json")
+    fun getFutureWeather(
+        @Query("q") location: String,
+        @Query("days") days: Int,
+        @Query("lang") languageCode: String = "en"
+    ): Deferred<FutureWeatherRemoteResponse>
 
     companion object {
         operator fun invoke(

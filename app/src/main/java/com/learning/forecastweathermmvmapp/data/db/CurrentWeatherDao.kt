@@ -5,12 +5,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.RewriteQueriesToDropUnusedColumns
 import com.learning.forecastweathermmvmapp.data.db.entity.CURRENT_WEATHER_ID
 import com.learning.forecastweathermmvmapp.data.db.entity.CurrentWeatherEntry
-import com.learning.forecastweathermmvmapp.data.db.unitlocalized.ImperialCurrentWeatherEntry
-import com.learning.forecastweathermmvmapp.data.db.unitlocalized.MetricCurrentWeatherEntry
-import com.learning.forecastweathermmvmapp.data.db.unitlocalized.UnitSpecificCurrentWeatherEntry
+import com.learning.forecastweathermmvmapp.data.db.unitlocalized.current.ImperialCurrentWeatherEntry
+import com.learning.forecastweathermmvmapp.data.db.unitlocalized.current.MetricCurrentWeatherEntry
 
 
 @Dao

@@ -1,7 +1,9 @@
 package com.learning.forecastweathermmvmapp.internal
 
 import com.learning.forecastweathermmvmapp.data.db.entity.CurrentWeatherEntry
+import com.learning.forecastweathermmvmapp.data.db.entity.FutureWeatherEntry
 import com.learning.forecastweathermmvmapp.data.network.response.CurrentWeatherRemoteEntry
+import com.learning.forecastweathermmvmapp.data.network.response.FutureWeatherRemoteEntry
 
 fun CurrentWeatherRemoteEntry.mapToLocalEntry() = CurrentWeatherEntry(
     this.feelslikeC,
@@ -17,4 +19,10 @@ fun CurrentWeatherRemoteEntry.mapToLocalEntry() = CurrentWeatherEntry(
     this.windDir,
     this.windKph,
     this.windMph
+)
+
+fun FutureWeatherRemoteEntry.mapToLocalEntry() = FutureWeatherEntry(
+    this.id,
+    this.date,
+    this.day
 )
