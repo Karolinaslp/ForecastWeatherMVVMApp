@@ -5,12 +5,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.learning.forecastweathermmvmapp.data.db.entity.WeatherLocation
 import com.learning.forecastweathermmvmapp.internal.LocationPermissionNotGrantedException
 import com.learning.forecastweathermmvmapp.internal.asDeferred
 import kotlinx.coroutines.Deferred
+import kotlin.math.abs
 
 private const val USE_DEVICE_LOCATION = "USE_DEVICE_LOCATION"
 private const val CUSTOM_LOCATION = "CUSTOM_LOCATION"
@@ -30,6 +32,7 @@ class LocationProviderImpl(
         return deviceLocationChanged || hasCustomLocationChanged(lastWeatherLocation)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override suspend fun getPreferredLocationString(): String {
         if (isUsingDeviceLocation()) {
             try {
@@ -41,7 +44,9 @@ class LocationProviderImpl(
             }
         }
         else
+            Log.d("GetPreferredLocation", "Custom")
             return "${getCustomLocationName()}"
+
     }
 
     private suspend fun hasDeviceLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {
@@ -53,8 +58,8 @@ class LocationProviderImpl(
 
         // Comparing doubles cannot be done with "=="
         val comparisonThreshold = 0.03
-        return Math.abs(deviceLocation.latitude - lastWeatherLocation.lat) > comparisonThreshold &&
-                Math.abs(deviceLocation.longitude - lastWeatherLocation.lon) > comparisonThreshold
+        return abs(deviceLocation.latitude - lastWeatherLocation.lat) > comparisonThreshold &&
+                abs(deviceLocation.longitude - lastWeatherLocation.lon) > comparisonThreshold
     }
 
     private fun hasCustomLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {

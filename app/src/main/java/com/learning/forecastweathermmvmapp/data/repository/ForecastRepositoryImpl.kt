@@ -1,6 +1,7 @@
 package com.learning.forecastweathermmvmapp.data.repository
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.learning.forecastweathermmvmapp.data.db.CurrentWeatherDao
 import com.learning.forecastweathermmvmapp.data.db.WeatherLocationDao
@@ -43,9 +44,7 @@ class ForecastRepositoryImpl(
         return withContext(Dispatchers.IO) {
             return@withContext weatherLocationDao.getLocation()
         }
-
     }
-
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun persistFetchedCurrentWeather(fetchedWeather: CurrentWeatherRemoteResponse) {
@@ -60,14 +59,14 @@ class ForecastRepositoryImpl(
 
         if (lastWeatherLocation == null
             || locationProvider.hasLocationChanged(lastWeatherLocation)) {
+            Log.d("Has location changed before fetching in Init weather data", "Fetch Before")
             fetchCurrentWeather()
+            Log.d("Init weather data after fetching", "Fetched")
             return
         }
-
-        if (isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime))
+        //if (isFetchCurrentNeeded(lastWeatherLocation.zonedDateTime))
             fetchCurrentWeather()
     }
-
 
     private suspend fun fetchCurrentWeather() {
         weatherNetworkDataSource.fetchCurrentWeather(

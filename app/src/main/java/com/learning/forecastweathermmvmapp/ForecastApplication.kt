@@ -2,7 +2,6 @@ package com.learning.forecastweathermmvmapp
 
 import android.app.Application
 import androidx.preference.PreferenceManager
-import androidx.room.Room
 import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.learning.forecastweathermmvmapp.data.db.ForecastDatabase
@@ -17,9 +16,9 @@ import com.learning.forecastweathermmvmapp.data.provider.UnitProvider
 import com.learning.forecastweathermmvmapp.data.provider.UnitProviderImpl
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepositoryImpl
-import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModel
+import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModelFactory
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -35,11 +34,11 @@ class ForecastApplication : Application() {
         single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
         single { WeatherApiService(get()) }
         single<WeatherNetworkDataSource> { WeatherNetworkDataSourceImpl(get()) }
-        single<LocationProvider>{ LocationProviderImpl(get(), get()) }
+        single<LocationProvider> { LocationProviderImpl(get(), get()) }
         single { LocationServices.getFusedLocationProviderClient(androidContext()) }
         factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
-        viewModel { CurrentWeatherViewModel(get(), get(), get()) }
+        factory { CurrentWeatherViewModelFactory(get(), get(), get()) }
     }
 
     override fun onCreate() {
@@ -49,7 +48,7 @@ class ForecastApplication : Application() {
 
         //Create and register KoinApplication instance
         startKoin {
-            //androidLogger()
+            androidLogger()
             androidContext(this@ForecastApplication)
             modules(appModule)
         }

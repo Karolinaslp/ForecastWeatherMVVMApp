@@ -7,19 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.databinding.FragmentCurrentWeatherBinding
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 
-class CurrentWeatherFragment : ScopedFragment() {
-    private val viewModel: CurrentWeatherViewModel by inject()
+class CurrentWeatherFragment() : ScopedFragment() {
+    private val viewModelFactory: CurrentWeatherViewModelFactory by inject()
+    private lateinit var  viewModel: CurrentWeatherViewModel
 
     private var _binding: FragmentCurrentWeatherBinding? = null
     private val binding
@@ -40,29 +41,21 @@ class CurrentWeatherFragment : ScopedFragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(this, viewModelFactory)[CurrentWeatherViewModel::class.java]
         _binding = FragmentCurrentWeatherBinding.inflate(layoutInflater, container, false)
 
         viewModel.currentUnitSystem.observe(viewLifecycleOwner) {
-            val currentWeather = viewModel.getWeatherFromDatabase()
-            currentWeather.observe(viewLifecycleOwner, Observer {
-                if (it == null) return@Observer
-                binding.groupLoading.visibility = View.GONE
-                updateLocation("LODZ")
-                updateDateToToday()
-                updateTemperature(it.temperature, it.feelsLikeTemperature)
-                updateCondition(it.conditionText)
-                updateVisibility(it.visibilityDistance)
-                updatePrecipitation(it.precipitationVolume)
-                updateWind(it.windDirection, it.windSpeed)
-                Glide.with(this@CurrentWeatherFragment)
-                    .load("https:${it.conditionIconUrl}")
-                    .into(binding.imageViewConditionIcon)
-            })
+            bindUI()
+        }
+        viewModel.currentCustomLocation.observe(viewLifecycleOwner) {
+            bindUI()
+        }
+        viewModel.isDeviceLocation.observe(viewLifecycleOwner) {
+            bindUI()
         }
         return binding.root
     }
@@ -79,10 +72,10 @@ class CurrentWeatherFragment : ScopedFragment() {
     }
 
     private fun bindUI() = launch {
-        val currentWeather = viewModel.weather.await()
-        val weatherLocation = viewModel.weatherLocation.await()
+        val currentWeather = viewModel.updateWeather()
+        val weatherLocation = viewModel.updateLocation()
 
-        weatherLocation.observe(this@CurrentWeatherFragment, Observer {  location ->
+        weatherLocation.observe(this@CurrentWeatherFragment, Observer { location ->
             if (location == null) return@Observer
 
             updateLocation(location.name)
