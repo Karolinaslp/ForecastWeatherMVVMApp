@@ -17,6 +17,7 @@ import com.learning.forecastweathermmvmapp.data.provider.UnitProviderImpl
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepositoryImpl
 import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModelFactory
+import com.learning.forecastweathermmvmapp.ui.weather.future.list.FutureListWeatherViewModelFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -30,15 +31,17 @@ class ForecastApplication : Application() {
         single { ForecastDatabase.buildDatabase(get()) }
         single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
         single { get<ForecastDatabase>().currentWeatherDao() }
+        single { get<ForecastDatabase>().futureWeatherDao() }
         single { get<ForecastDatabase>().weatherLocationDao() }
         single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
         single { WeatherApiService(get()) }
         single<WeatherNetworkDataSource> { WeatherNetworkDataSourceImpl(get()) }
         single<LocationProvider> { LocationProviderImpl(get(), get()) }
         single { LocationServices.getFusedLocationProviderClient(androidContext()) }
-        factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get()) }
+        factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
         factory { CurrentWeatherViewModelFactory(get(), get(), get()) }
+        factory { FutureListWeatherViewModelFactory(get(), get()) }
     }
 
     override fun onCreate() {

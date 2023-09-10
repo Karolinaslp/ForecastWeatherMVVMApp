@@ -1,6 +1,7 @@
 package com.learning.forecastweathermmvmapp.data.db
 
 import androidx.lifecycle.LiveData
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -9,9 +10,10 @@ import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.Imperial
 import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.MetricSpecificSimpleFutureWeatherEntry
 import org.threeten.bp.LocalDate
 
+@Dao
 interface FutureWeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(futureWeatherEntry: FutureWeatherEntry)
+    fun insert(futureWeatherEntry: List<FutureWeatherEntry>)
 
     @Query("SELECT  * FROM future_weather WHERE date(date) >= date(:startDate)")
     fun getSimpleWeatherForecastsMetric(startDate: LocalDate):LiveData<List<MetricSpecificSimpleFutureWeatherEntry>>
