@@ -14,6 +14,10 @@
             android:title="Location"
             android:summary="The location for which the weather is displayed"
             android:defaultValue="Los Angeles"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:positiveButtonText="Ok"
+            android:negativeButtonText="Cancel"
             android:dependency="USE_DEVICE_LOCATION"/>
     </PreferenceCategory>
 

@@ -34,7 +34,7 @@ android {
     }
     buildFeatures {
         viewBinding true
-       // dataBinding true
+        dataBinding true
     }
 }
 
@@ -65,7 +65,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     //GSON
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

@@ -1,5 +1,6 @@
 package com.learning.forecastweathermmvmapp.ui.weather.current
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +14,6 @@ import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.databinding.FragmentCurrentWeatherBinding
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -75,13 +75,13 @@ class CurrentWeatherFragment() : ScopedFragment() {
         val currentWeather = viewModel.updateWeather()
         val weatherLocation = viewModel.updateLocation()
 
-        weatherLocation.observe(this@CurrentWeatherFragment, Observer { location ->
+        weatherLocation.observe(viewLifecycleOwner, Observer { location ->
             if (location == null) return@Observer
 
             updateLocation(location.name)
         })
 
-        currentWeather.observe(this@CurrentWeatherFragment, Observer {
+        currentWeather.observe(viewLifecycleOwner, Observer {
             if (it == null) return@Observer
 
             binding.groupLoading.visibility = View.GONE
@@ -121,16 +121,19 @@ class CurrentWeatherFragment() : ScopedFragment() {
         binding.textViewCondition.text = condition
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updatePrecipitation(precipitationVolume: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation("mm", "in")
         binding.textViewPrecipitation.text = "Precipitation: $precipitationVolume $unitAbbreviation"
     }
 
-    private fun updateWind(windDirectiion: String, windSpeed: Double) {
+    @SuppressLint("SetTextI18n")
+    private fun updateWind(windDirection: String, windSpeed: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation("kph", "mph")
-        binding.textViewWind.text = "Wind: $windDirectiion, $windSpeed $unitAbbreviation"
+        binding.textViewWind.text = "Wind: $windDirection, $windSpeed $unitAbbreviation"
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateVisibility(visibilityDistance: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation("km", "mi.")
         binding.textViewVisibility.text = "Visibility: $visibilityDistance $unitAbbreviation"

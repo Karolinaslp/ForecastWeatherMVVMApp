@@ -12,7 +12,7 @@ import com.learning.forecastweathermmvmapp.data.db.entity.WeatherLocation
 
 @Database(
     entities = [CurrentWeatherEntry::class,FutureWeatherEntry::class, WeatherLocation::class],
-    version = 2
+    version = 3
 )
 @TypeConverters(LocalDateConverter::class)
 abstract class ForecastDatabase : RoomDatabase() {

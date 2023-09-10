@@ -1,78 +1,52 @@
 package com.learning.forecastweathermmvmapp.ui.weather.future.list
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.MetricSimpleFutureWeatherEntry
-import com.xwray.groupie.Item
-
 import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.UnitSpecificSimpleFutureWeatherEntry
+import com.xwray.groupie.viewbinding.BindableItem
+import com.xwray.groupie.viewbinding.GroupieViewHolder
 import com.learning.forecastweathermmvmapp.databinding.ItemFutureWeatherBinding
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.databinding.BindableItem
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
-import java.util.Collections.addAll
-
 
 class FutureWeatherItem(
     val weatherEntry: UnitSpecificSimpleFutureWeatherEntry
-) : RecyclerView.Adapter<FutureWeatherItem.ViewHolder>() {
+) : BindableItem<ItemFutureWeatherBinding>() {
 
-    inner class ViewHolder(binding: ItemFutureWeatherBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val condition = binding.textViewCondition
-        val date = binding.textViewDate
-        val temperature = binding.textViewTemperature
-        val icon = binding.textViewConditionImage
+    override fun getLayout() = R.layout.item_future_weather
+
+    override fun initializeViewBinding(view: View): ItemFutureWeatherBinding {
+        return ItemFutureWeatherBinding.bind(view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val futureWeatherRow = ItemFutureWeatherBinding.inflate(layoutInflater, parent, false)
-        return ViewHolder(futureWeatherRow)
-    }
-
-    override fun getItemCount(): Int {
-        TODO()
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.condition.text = weatherEntry.conditionText
-        holder.apply {
+    override fun bind(viewBinding: ItemFutureWeatherBinding, position: Int) {
+        viewBinding.apply {
+            textViewCondition.text = weatherEntry.conditionText
             updateDate()
             updateTemperature()
             updateConditionImage()
         }
     }
-    private fun List<UnitSpecificSimpleFutureWeatherEntry>.toFutureWeatherItems(): List<FutureWeatherItem> {
-        return this.map {
-            FutureWeatherItem(it)
-        }
-    }
-    private fun initRecyclerView(item: List<FutureWeatherItem>) {
-        val groupAdapter = this.apply {
-            addAll(items)
-        }
-    }
 
-    private fun ViewHolder.updateDate() {
+    private fun ItemFutureWeatherBinding.updateDate() {
         val dtFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-        date.text = weatherEntry.date.format(dtFormatter)
+        textViewDate.text = weatherEntry.date.format(dtFormatter)
     }
 
-    private fun ViewHolder.updateTemperature() {
+    private fun ItemFutureWeatherBinding.updateTemperature() {
         val unitAbbreviation = if (weatherEntry is MetricSimpleFutureWeatherEntry) "°C"
         else "°F"
-        temperature.text = "${weatherEntry.avgTemperature}$unitAbbreviation"
+        textViewTemperature.text = "${weatherEntry.avgTemperature}$unitAbbreviation"
     }
 
-    private fun ViewHolder.updateConditionImage() {
-        Glide.with(this.itemView)
+    private fun ItemFutureWeatherBinding.updateConditionImage() {
+        Glide.with(this.root)
             .load("http:" + weatherEntry.conditionIconUrl)
-            .into(icon)
+            .into(imageViewConditionImage)
     }
 }
 
