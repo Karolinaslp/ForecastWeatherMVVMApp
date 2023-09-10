@@ -3,7 +3,7 @@ package com.learning.forecastweathermmvmapp.data.db.unitlocalized.future
 import androidx.room.ColumnInfo
 import org.threeten.bp.LocalDate
 
-class ImperialSpecificSimpleFutureWeatherEntry(
+class ImperialSimpleFutureWeatherEntry(
     @ColumnInfo(name = "date")
     override val date: LocalDate,
 
