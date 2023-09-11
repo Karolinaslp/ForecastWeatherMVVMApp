@@ -11,14 +11,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.forecastweathermmvmapp.data.db.LocalDateConverter
-import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.UnitSpecificSimpleFutureWeatherEntry
+import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.list.UnitSpecificSimpleFutureWeatherEntry
 import com.learning.forecastweathermmvmapp.databinding.FragmentFutureListWeatherBinding
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
-import com.xwray.groupie.OnItemClickListener
 import kotlinx.android.synthetic.main.fragment_future_list_weather.recyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

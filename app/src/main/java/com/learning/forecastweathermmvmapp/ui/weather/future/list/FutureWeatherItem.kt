@@ -1,16 +1,12 @@
 package com.learning.forecastweathermmvmapp.ui.weather.future.list
 
 
-import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.R
-import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.MetricSimpleFutureWeatherEntry
-import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.UnitSpecificSimpleFutureWeatherEntry
+import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.list.MetricSimpleFutureWeatherEntry
+import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.list.UnitSpecificSimpleFutureWeatherEntry
 import com.xwray.groupie.viewbinding.BindableItem
-import com.xwray.groupie.viewbinding.GroupieViewHolder
 import com.learning.forecastweathermmvmapp.databinding.ItemFutureWeatherBinding
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle

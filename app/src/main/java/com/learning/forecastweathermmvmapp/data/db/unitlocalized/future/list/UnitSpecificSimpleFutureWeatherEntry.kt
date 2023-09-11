@@ -1,4 +1,4 @@
-package com.learning.forecastweathermmvmapp.data.db.unitlocalized.future
+package com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.list
 
 import org.threeten.bp.LocalDate
 
