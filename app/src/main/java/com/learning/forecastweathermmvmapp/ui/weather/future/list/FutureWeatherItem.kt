@@ -28,8 +28,14 @@ class FutureWeatherItem(
             textViewCondition.text = weatherEntry.conditionText
             updateDate()
             updateTemperature()
-            updateConditionImage()
+            updateConditionImage(viewBinding)
         }
+    }
+
+    private fun updateConditionImage(viewBinding: ItemFutureWeatherBinding) {
+        Glide.with(viewBinding.root.context)
+            .load("https:" + weatherEntry.conditionIconUrl)
+            .into(viewBinding.imageViewConditionIcon)
     }
 
     private fun ItemFutureWeatherBinding.updateDate() {
@@ -41,12 +47,6 @@ class FutureWeatherItem(
         val unitAbbreviation = if (weatherEntry is MetricSimpleFutureWeatherEntry) "°C"
         else "°F"
         textViewTemperature.text = "${weatherEntry.avgTemperature}$unitAbbreviation"
-    }
-
-    private fun ItemFutureWeatherBinding.updateConditionImage() {
-        Glide.with(this.root)
-            .load("http:" + weatherEntry.conditionIconUrl)
-            .into(imageViewConditionImage)
     }
 }
 

@@ -107,7 +107,6 @@ class FutureListWeatherFragment : ScopedFragment() {
         }
     }
 
-
     private fun showWeatherDetails(date: LocalDate, view: View) {
         val dateString = LocalDateConverter.dateToString(date)!!
 

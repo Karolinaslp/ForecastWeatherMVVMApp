@@ -11,20 +11,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val API_KEY = "89ac5cb035c74d3693285907232808"
+const val API_KEY = "6d55ac92334242dcbcf70918231109"
 
 
 
 interface WeatherApiService {
 
-    //http://api.weatherapi.com/v1/current.json?key=89ac5cb035c74d3693285907232808&q=Lodz&aqi=no
+    //http://api.weatherapi.com/v1/current.json?key=6d55ac92334242dcbcf70918231109&q=Lodz&aqi=no
     @GET("current.json")
     fun getCurrentWeather(
         @Query("q") location: String,
         @Query("lang") languageCode: String = "en"
     ): Deferred<CurrentWeatherRemoteResponse>
 
-    //https://api.weatherapi.com/v1/forecast.json?key=89ac5cb035c74d3693285907232808&q=London&days=1&aqi=no&alerts=no
+    //https://api.weatherapi.com/v1/forecast.json?key=6d55ac92334242dcbcf70918231109&q=London&days=7&aqi=no&alerts=no
     @GET("forecast.json")
     fun getFutureWeather(
         @Query("q") location: String,
