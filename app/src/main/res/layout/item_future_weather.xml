@@ -6,9 +6,11 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:minHeight="?listPreferredItemHeightLarge"
+    android:clickable="true"
     app:cardCornerRadius="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"

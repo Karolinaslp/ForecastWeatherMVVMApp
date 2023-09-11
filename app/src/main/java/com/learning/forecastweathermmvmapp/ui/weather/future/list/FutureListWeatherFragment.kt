@@ -15,7 +15,10 @@ import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.UnitSpec
 import com.learning.forecastweathermmvmapp.databinding.FragmentFutureListWeatherBinding
 import com.learning.forecastweathermmvmapp.ui.base.ScopedFragment
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import com.xwray.groupie.OnItemClickListener
 import kotlinx.android.synthetic.main.fragment_future_list_weather.recyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,7 +86,7 @@ class FutureListWeatherFragment : ScopedFragment() {
 
     private fun List<UnitSpecificSimpleFutureWeatherEntry>.toFutureWeatherItems(): List<FutureWeatherItem> {
         return this.map {
-            FutureWeatherItem(it)
+            FutureWeatherItem(it, { showToast() })
         }
     }
 
@@ -97,14 +100,6 @@ class FutureListWeatherFragment : ScopedFragment() {
             layoutManager = LinearLayoutManager(this@FutureListWeatherFragment.context)
             adapter = groupAdapter
         }
-
-        groupAdapter.setOnItemClickListener { item, view ->
-//            (item as? FutureWeatherItem)?.let {
-//                showWeatherDetails(it.weatherEntry.date, view)
-//            }
-            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked", Toast.LENGTH_LONG)
-                .show()
-        }
     }
 
     private fun showWeatherDetails(date: LocalDate, view: View) {
@@ -115,5 +110,9 @@ class FutureListWeatherFragment : ScopedFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun showToast(){
+        Toast.makeText(this@FutureListWeatherFragment.context, "Clicked", Toast.LENGTH_SHORT).show()
     }
 }

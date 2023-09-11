@@ -1,7 +1,9 @@
 package com.learning.forecastweathermmvmapp.ui.weather.future.list
 
 
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.R
@@ -14,7 +16,8 @@ import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 
 class FutureWeatherItem(
-    val weatherEntry: UnitSpecificSimpleFutureWeatherEntry
+    val weatherEntry: UnitSpecificSimpleFutureWeatherEntry,
+    val clickListener: ()-> Unit
 ) : BindableItem<ItemFutureWeatherBinding>() {
 
     override fun getLayout() = R.layout.item_future_weather
@@ -26,10 +29,18 @@ class FutureWeatherItem(
     override fun bind(viewBinding: ItemFutureWeatherBinding, position: Int) {
         viewBinding.apply {
             textViewCondition.text = weatherEntry.conditionText
+            rootView.setOnClickListener {
+               clickListener()
+//                it.context?.also{
+//                    Toast.makeText(it,"Clicked",Toast.LENGTH_LONG).show()
+//                }
+            }
             updateDate()
             updateTemperature()
             updateConditionImage(viewBinding)
         }
+
+
     }
 
     private fun updateConditionImage(viewBinding: ItemFutureWeatherBinding) {
