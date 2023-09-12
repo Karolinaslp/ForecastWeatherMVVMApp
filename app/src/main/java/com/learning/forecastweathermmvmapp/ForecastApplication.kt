@@ -17,11 +17,14 @@ import com.learning.forecastweathermmvmapp.data.provider.UnitProviderImpl
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepositoryImpl
 import com.learning.forecastweathermmvmapp.ui.weather.current.CurrentWeatherViewModelFactory
+import com.learning.forecastweathermmvmapp.ui.weather.future.detail.FutureDetailWeatherViewModelFactory
 import com.learning.forecastweathermmvmapp.ui.weather.future.list.FutureListWeatherViewModelFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import org.threeten.bp.LocalDate
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 class ForecastApplication : Application() {
 
@@ -42,6 +45,7 @@ class ForecastApplication : Application() {
         factory<UnitProvider> { UnitProviderImpl(get()) }
         factory { CurrentWeatherViewModelFactory(get(), get(), get()) }
         factory { FutureListWeatherViewModelFactory(get(), get()) }
+        factory {(detailDate: LocalDate) -> FutureDetailWeatherViewModelFactory(detailDate, get(), get()) }
     }
 
     override fun onCreate() {

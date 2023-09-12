@@ -9,7 +9,7 @@ interface UnitSpecificDetailFutureWeatherEntry {
     val avgTemperature: Double
     val conditionText: String
     val conditionIconUrl: String
-    val maxWindSpeed: Double
+    val maxWind: Double
     val totalPrecipitation: Double
     val avgVisibilityDistance: Double
     val uv: Double

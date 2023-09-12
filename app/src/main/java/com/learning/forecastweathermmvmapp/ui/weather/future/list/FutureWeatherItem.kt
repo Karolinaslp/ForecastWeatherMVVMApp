@@ -2,6 +2,8 @@ package com.learning.forecastweathermmvmapp.ui.weather.future.list
 
 
 import android.view.View
+import android.widget.Toast
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.list.MetricSimpleFutureWeatherEntry
@@ -27,9 +29,10 @@ class FutureWeatherItem(
             textViewCondition.text = weatherEntry.conditionText
             rootView.setOnClickListener {
                clickListener()
-//                it.context?.also{
-//                    Toast.makeText(it,"Clicked",Toast.LENGTH_LONG).show()
-//                }
+                it.context?.also{
+                    Toast.makeText(it,"Clicked",Toast.LENGTH_LONG).show()
+                  //  Navigation.findNavController(, )
+                }
             }
             updateDate()
             updateTemperature()

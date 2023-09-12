@@ -16,8 +16,8 @@ data class ImperialDetailFutureWeatherEntry(
     override val conditionText: String,
     @ColumnInfo(name = "condition_icon")
     override val conditionIconUrl: String,
-    @ColumnInfo(name = "maxWindMph")
-    override val maxWindSpeed: Double,
+    @ColumnInfo(name = "maxwindMph")
+    override val maxWind: Double,
     @ColumnInfo(name = "totalprecipIn")
     override val totalPrecipitation: Double,
     @ColumnInfo(name = "avgvisMiles")

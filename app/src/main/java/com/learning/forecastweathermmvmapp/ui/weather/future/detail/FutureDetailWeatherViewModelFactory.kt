@@ -1,19 +1,19 @@
 package com.learning.forecastweathermmvmapp.ui.weather.future.detail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.learning.forecastweathermmvmapp.data.provider.UnitProvider
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
-import com.learning.forecastweathermmvmapp.internal.lazyDeferred
-import com.learning.forecastweathermmvmapp.ui.base.WeatherViewModel
 import org.threeten.bp.LocalDate
 
-class FutureDetailWeatherViewModel(
+class FutureDetailWeatherViewModelFactory(
     private val detailDate: LocalDate,
     private val forecastRepository: ForecastRepository,
-    unitProvider: UnitProvider
-) : WeatherViewModel(forecastRepository, unitProvider) {
+    private val unitProvider: UnitProvider
+) : ViewModelProvider.NewInstanceFactory() {
 
-    val weather by lazyDeferred {
-        forecastRepository.getFutureWeatherByDate(detailDate, super.isMetricUnit)
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return FutureDetailWeatherViewModel(detailDate, forecastRepository,unitProvider) as T
     }
 }

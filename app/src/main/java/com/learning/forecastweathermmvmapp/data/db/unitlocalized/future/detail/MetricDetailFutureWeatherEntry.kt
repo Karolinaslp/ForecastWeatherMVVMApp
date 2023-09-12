@@ -16,8 +16,8 @@ data class MetricDetailFutureWeatherEntry(
     override val conditionText: String,
     @ColumnInfo(name = "condition_icon")
     override val conditionIconUrl: String,
-    @ColumnInfo(name = "maxWindKph")
-    override val maxWindSpeed: Double,
+    @ColumnInfo(name = "maxwindKph")
+    override val maxWind: Double,
     @ColumnInfo(name = "totalprecipMm")
     override val totalPrecipitation: Double,
     @ColumnInfo(name = "avgvisKm")

@@ -1,6 +1,7 @@
 package com.learning.forecastweathermmvmapp.ui.weather.future.list
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ActionOnlyNavDirections
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.data.db.LocalDateConverter
 import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.list.UnitSpecificSimpleFutureWeatherEntry
 import com.learning.forecastweathermmvmapp.databinding.FragmentFutureListWeatherBinding
@@ -26,6 +32,7 @@ class FutureListWeatherFragment : ScopedFragment() {
 
     private val viewModelFactory: FutureListWeatherViewModelFactory by inject()
     private lateinit var viewModel: FutureListWeatherViewModel
+    private lateinit var navController: NavController
 
 
     private var _binding: FragmentFutureListWeatherBinding? = null
@@ -42,7 +49,6 @@ class FutureListWeatherFragment : ScopedFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFutureListWeatherBinding.inflate(layoutInflater, container, false)
-
         return binding.root
     }
 
@@ -87,7 +93,6 @@ class FutureListWeatherFragment : ScopedFragment() {
         }
     }
 
-    @SuppressLint("ShowToast")
     private fun initRecyclerView(items: List<FutureWeatherItem>) {
         val groupAdapter = GroupAdapter<GroupieViewHolder>().apply {
             addAll(items)
@@ -97,11 +102,17 @@ class FutureListWeatherFragment : ScopedFragment() {
             layoutManager = LinearLayoutManager(this@FutureListWeatherFragment.context)
             adapter = groupAdapter
         }
+        groupAdapter.setOnItemClickListener { item, view ->
+            (item as? FutureWeatherItem)?.let{
+                showWeatherDetails(it.weatherEntry.date, view)
+            }
+        }
     }
 
     private fun showWeatherDetails(date: LocalDate, view: View) {
         val dateString = LocalDateConverter.dateToString(date)!!
-
+        val actionDetail = FutureListWeatherFragmentDirections.actionDetail(dateString)
+        Navigation.findNavController(view).navigate(actionDetail)
     }
 
     override fun onDestroyView() {
@@ -109,7 +120,7 @@ class FutureListWeatherFragment : ScopedFragment() {
         _binding = null
     }
 
-    fun showToast(){
+    fun showToast() {
         Toast.makeText(this@FutureListWeatherFragment.context, "Clicked", Toast.LENGTH_SHORT).show()
     }
 }
