@@ -24,7 +24,6 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.threeten.bp.LocalDate
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 class ForecastApplication : Application() {
 
@@ -44,7 +43,7 @@ class ForecastApplication : Application() {
         factory<ForecastRepository> { ForecastRepositoryImpl(get(), get(), get(), get(), get()) }
         factory<UnitProvider> { UnitProviderImpl(get()) }
         factory { CurrentWeatherViewModelFactory(get(), get(), get()) }
-        factory { FutureListWeatherViewModelFactory(get(), get()) }
+        factory { FutureListWeatherViewModelFactory(get(), get(), get()) }
         factory {(detailDate: LocalDate) -> FutureDetailWeatherViewModelFactory(detailDate, get(), get()) }
     }
 

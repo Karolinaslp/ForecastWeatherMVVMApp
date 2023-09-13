@@ -1,6 +1,8 @@
 package com.learning.forecastweathermmvmapp.ui.base
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.learning.forecastweathermmvmapp.data.db.entity.WeatherLocation
 import com.learning.forecastweathermmvmapp.data.provider.UnitProvider
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.internal.UnitSystem
@@ -19,4 +21,13 @@ abstract class WeatherViewModel(
     open val weatherLocation by lazyDeferred {
         forecastRepository.getWeatherLocation()
     }
+
+//    suspend fun updateWeather(date: LocalDate, isMetric: Boolean): LiveData<out List<UnitSpecificSimpleFutureWeatherEntry>> {
+//        return forecastRepository.getFutureWeatherList(date, isMetric)
+//    }
+
+    suspend fun updateLocation(): LiveData<WeatherLocation> {
+        return forecastRepository.getWeatherLocation()
+    }
+
 }

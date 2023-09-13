@@ -39,7 +39,9 @@ class FutureDetailWeatherFragment : ScopedFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         _binding = FragmentFutureDetailWeatherBinding.inflate(layoutInflater, container, false)
+        bindUI()
         return binding.root
     }
 
@@ -55,8 +57,8 @@ class FutureDetailWeatherFragment : ScopedFragment() {
     }
 
     private fun bindUI() = launch(Dispatchers.Main) {
-        val futureWeather = viewModel.weather.await()
-        val weatherLocation = viewModel.weatherLocation.await()
+        val futureWeather = viewModel.updateWeather()
+        val weatherLocation = viewModel.updateLocation()
 
         weatherLocation.observe(this@FutureDetailWeatherFragment, Observer { location ->
             if(location == null) return@Observer

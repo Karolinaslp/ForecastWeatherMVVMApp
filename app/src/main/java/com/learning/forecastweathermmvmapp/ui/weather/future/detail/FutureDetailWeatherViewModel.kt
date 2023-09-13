@@ -1,6 +1,7 @@
 package com.learning.forecastweathermmvmapp.ui.weather.future.detail
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import com.learning.forecastweathermmvmapp.data.db.unitlocalized.future.detail.UnitSpecificDetailFutureWeatherEntry
 import com.learning.forecastweathermmvmapp.data.provider.UnitProvider
 import com.learning.forecastweathermmvmapp.data.repository.ForecastRepository
 import com.learning.forecastweathermmvmapp.internal.lazyDeferred
@@ -15,5 +16,9 @@ class FutureDetailWeatherViewModel(
 
     val weather by lazyDeferred {
         forecastRepository.getFutureWeatherByDate(detailDate, super.isMetricUnit)
+    }
+
+     suspend fun updateWeather(): LiveData<out UnitSpecificDetailFutureWeatherEntry>{
+        return forecastRepository.getFutureWeatherByDate(detailDate, super.isMetricUnit)
     }
 }

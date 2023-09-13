@@ -2,7 +2,9 @@ package com.learning.forecastweathermmvmapp.ui.weather.future.list
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import androidx.navigation.ActionOnlyNavDirections
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.forecastweathermmvmapp.R
 import com.learning.forecastweathermmvmapp.data.db.LocalDateConverter
@@ -28,12 +31,13 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.threeten.bp.LocalDate
 
+
 class FutureListWeatherFragment : ScopedFragment() {
 
     private val viewModelFactory: FutureListWeatherViewModelFactory by inject()
     private lateinit var viewModel: FutureListWeatherViewModel
     private lateinit var navController: NavController
-
+    private val UNIT_SYSTEM_KEY = "UNIT_SYSTEM"
 
     private var _binding: FragmentFutureListWeatherBinding? = null
     private val binding
@@ -43,12 +47,29 @@ class FutureListWeatherFragment : ScopedFragment() {
         fun newInstance() = FutureListWeatherFragment()
     }
 
+    private lateinit var prefs: SharedPreferences
+
+    private val listener = object : SharedPreferences.OnSharedPreferenceChangeListener {
+        override fun onSharedPreferenceChanged(
+            sharedPreferences: SharedPreferences?,
+            key: String?
+        ) {
+            Log.d("TAG", "return value BATMAN")
+            if (key == UNIT_SYSTEM_KEY) {
+                val temp = sharedPreferences?.getString(UNIT_SYSTEM_KEY, "mmm")
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(this, viewModelFactory)[FutureListWeatherViewModel::class.java]
         _binding = FragmentFutureListWeatherBinding.inflate(layoutInflater, container, false)
+        viewModel.currentUnitSystem.observe(viewLifecycleOwner){
+            bindUI()
+        }
         return binding.root
     }
 
@@ -57,11 +78,15 @@ class FutureListWeatherFragment : ScopedFragment() {
         viewModel =
             ViewModelProvider(this, viewModelFactory)[FutureListWeatherViewModel::class.java]
         bindUI()
+
+        prefs =
+            context?.applicationContext?.let { PreferenceManager.getDefaultSharedPreferences(it) }!!
+        prefs.registerOnSharedPreferenceChangeListener(listener)
     }
 
     private fun bindUI() = launch(Dispatchers.Main) {
-        val futureWeatherEntries = viewModel.weatherEntries.await()
-        val weatherLocation = viewModel.weatherLocation.await()
+        val futureWeatherEntries = viewModel.updateWeatherEntries()
+        val weatherLocation = viewModel.updateLocation()
 
         weatherLocation.observe(viewLifecycleOwner, Observer { location ->
             if (location == null) return@Observer
